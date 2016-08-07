@@ -75,6 +75,11 @@ for (let i = 0, worker;i < cores; i++) {
 }
 ```
 
-## lisense
+## todo
+
+[] render via stream
+[] kill worker
+
+## license
 
 MIT
