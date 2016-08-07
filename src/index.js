@@ -9,24 +9,28 @@ export default class Worker extends EventEmitter {
     };
     page;
     fnGetRenderParam;
-    config = {
-        viewportSize: {width: 1024, height: 1024 * (2339/1654)},
-        paperSize: {
-            format: 'A4',
-            orientation: 'portrait',
-            width: page.property('viewportSize').width + 'px',
-            height: page.property('viewportSize').height + 'px'
-        }
-    };
 
     constructor(fnGetRenderParam, config) {
         super();
 
         this.fnGetRenderParam = fnGetRenderParam;
-        this.init(config || this.config);
+        this.init(config);
     }
 
     async init(config) {
+        if (!config) {
+            const width = 1024;
+            const height = 1024 * (2339 / 1654);
+            config = {
+                viewportSize: {width, height},
+                paperSize: {
+                    format: 'A4',
+                    orientation: 'portrait',
+                    width: width + 'px',
+                    height: height + 'px'
+                }
+            };
+        }
         const instance = await phantom.create();
         const page = await instance.createPage();
 
