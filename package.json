@@ -1,0 +1,32 @@
+{
+  "name": "phantomjs-render-worker",
+  "version": "1.0.0",
+  "description": "render pdf or image format via phantomjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "build": "./node_modules/.bin/babel src -d built",
+    "build:watch": "npm run build -- --watch",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["phantomjs", "pdf", "html"],
+  "author": "deptno@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "phantom": "^2.1.14"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-stage-0": "^6.5.0"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/deptno/phantomjs-render-worker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/deptno/phantomjs-render-worker/issues",
+    "email": "deptno@gmail.com"
+  }
+}
