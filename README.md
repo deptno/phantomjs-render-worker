@@ -19,14 +19,14 @@ fnGetRenderParam = (url) => {
 
 ```js
 {
-    viewportSize: {width: 1024, height: 1024 * (2339/1654)},
+    viewportSize: {1024, 1024 * (2339 / 1654)},
     paperSize: {
         format: 'A4',
         orientation: 'portrait',
-        width: page.property('viewportSize').width + 'px',
-        height: page.property('viewportSize').height + 'px'
+        width: 1024 + 'px',
+        height: 1024 * (2339 / 1654) + 'px'
     }
-}
+};
 ```
 
 render
@@ -77,8 +77,8 @@ for (let i = 0, worker;i < cores; i++) {
 
 ## todo
 
-[] render via stream
-[] kill worker
+* render via stream
+* kill worker
 
 ## license
 
