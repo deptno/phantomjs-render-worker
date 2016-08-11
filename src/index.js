@@ -3,53 +3,72 @@ import {EventEmitter} from 'events';
 
 export default class Worker extends EventEmitter {
     static event = {
-        success: 'success',
+        init: 'init',
+        rendering: 'rendering',
         rendered: 'rendered',
         error: 'error'
     };
+    config = {
+        viewportSize: {
+            width: 1024,
+            height: 1024 * (2339 / 1654)
+        },
+        paperSize: {
+            format: 'A4',
+            orientation: 'portrait',
+            width: 825+'px',
+            height: 1166+'px',
+            margin: {
+                top: '5mm',
+                right: '5mm',
+                bottom: '5mm',
+                left: '5mm'
+            }
+        }
+    };
     page;
-    fnGetRenderParam;
+    delay;
+    poll;
 
-    constructor(fnGetRenderParam, config) {
+    constructor(format, delay, poll, config) {
         super();
 
-        this.fnGetRenderParam = fnGetRenderParam;
-        this.init(config);
+        this.format = format || 'png';
+        this.delay = (delay || 1) * 1000;
+        this.poll = poll || (() => true);
+        this.init(config || this.config);
     }
 
     async init(config) {
-        if (!config) {
-            const width = 1024;
-            const height = 1024 * (2339 / 1654);
-            config = {
-                viewportSize: {width, height},
-                paperSize: {
-                    format: 'A4',
-                    orientation: 'portrait',
-                    width: width + 'px',
-                    height: height + 'px'
-                }
-            };
-        }
         const instance = await phantom.create();
         const page = await instance.createPage();
 
         Object.keys(config).map(prop => page.property(prop, config[prop]));
 
         this.page = page;
-        this.emit('ready', this);
+        this.emit(Worker.event.init, this);
     }
 
-    async render(target) {
-        const status = await this.page.open(target);
+    async render(url, file, poll) {
+        const status = await this.page.open(url);
 
         if (status === 'success') {
-            this.emit('success', this);
-            const renderParam = this.fnGetRenderParam(target);
-            this.page.render(renderParam);
-            this.emit('rendered', renderParam);
+            this.emit(Worker.event.rendering, this);
+            this._render(file, poll || this.poll);
         } else {
-            this.emit('error', this);
+            this.emit(Worker.event.error, this);
         }
+    }
+
+    _render(file, poll) {
+        setTimeout(async () => {
+            const ready = await this.page.evaluate(poll);
+            if (ready) {
+                await this.page.render(file, {format: this.format});
+                this.emit(Worker.event.rendered, file);
+            } else {
+                this._render(file, poll);
+            }
+        }, this.delay);
     }
 }
