@@ -49,26 +49,43 @@ export default class Worker extends EventEmitter {
         this.emit(Worker.event.init, this);
     }
 
-    async render(url, file, poll) {
-        const status = await this.page.open(url);
+    render(url, file, poll) {
+        return new Promise(async (resolve, reject) => {
+            const status = await this.page.open(url);
 
-        if (status === 'success') {
-            this.emit(Worker.event.rendering, this);
-            this._render(file, poll || this.poll);
-        } else {
-            this.emit(Worker.event.error, this);
-        }
+            if (status === 'success') {
+                this.emit(Worker.event.rendering, this);
+                try {
+                    const result = await this._render(file, poll || this.poll);
+                    resolve(result);
+                } catch(error) {
+                    reject({ file, error });
+                }
+            } else {
+                this.emit(Worker.event.error, this);
+            }
+        });
     }
 
     _render(file, poll) {
-        setTimeout(async () => {
-            const ready = await this.page.evaluate(poll);
-            if (ready) {
-                await this.page.render(file, {format: this.format});
-                this.emit(Worker.event.rendered, file);
-            } else {
-                this._render(file, poll);
-            }
-        }, this.delay);
+        return new Promise((resolve, reject) => {
+            const __render = () => {
+                setTimeout(async () => {
+                    const ready = await this.page.evaluate(poll);
+                    if (ready) {
+                        try {
+                            await this.page.render(file, {format: this.format});
+                            resolve(file);
+                            this.emit(Worker.event.rendered, file);
+                        } catch (ex) {
+                            reject(ex);
+                        }
+                    } else {
+                        __render(file, poll);
+                    }
+                }, this.delay);
+            };
+            __render(file, poll);
+        });
     }
 }
