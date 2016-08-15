@@ -1,5 +1,5 @@
-phantomjs-render-worker
-===
+phantomjs-render-worker [![Build Status](https://travis-ci.org/deptno/phantomjs-render-worker.svg?branch=master)](https://travis-ci.org/deptno/phantomjs-render-worker)
+=======================
 
 ## method
 
