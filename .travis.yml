@@ -7,8 +7,6 @@ cache:
 install:
 - npm install
 - npm run build
-before_deploy:
-- npm version patch
 notifications:
   email: false
   slack:
