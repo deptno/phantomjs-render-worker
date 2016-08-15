@@ -3,19 +3,29 @@ phantomjs-render-worker
 
 ## method
 
-constructor(fnGetRenderParam: targetUrl => string, config?);
+constructor(format? = 'pdf', delay? = 1, poll = (() => true), config?)
 
-> fnGetRenderParam
+> format
 
-function should returns string like `filename.extension`, extension means result file format you want(eg, `result.pdf`)
+rendered file format you want(eg, `pdf`, `png`)
+
+> delay
+
+second, polling period
+
+> poll
+
+repeat function to check render is done,
+this function runs client side
+if this function returns TRUE, the render worker will start rendering
 
 ```js
-fnGetRenderParam = (url) => {
-    return 'filename.pdf';
-}
+() => window.__renderable === true;
 ```
 
-> default config
+>  config
+
+default config is below
 
 ```js
 {
@@ -29,50 +39,73 @@ fnGetRenderParam = (url) => {
 };
 ```
 
-render
+render(url: string, file: string, poll?: () => boolean): Promise
+
+> url
+
+url want to render
+
+> file
+
+rendered file name
+
+> poll
+
+override default polling function
 
 ## event
 
-> ready
+> init
 
 when phantomjs create page and finish page configuration
 
-> success
+> rendering
 
-when succeed page.open
-
-> error
-
-when page.open error
+when start rendering, it means polling function returns TRUE
 
 > rendered
 
 when succeed to generate render file
 
+> error
+
+when page.open error
+
 ## usage
 
+### event driven
+
 ```js
-import os from 'os';
 import Worker from 'phantomjs-render-worker';
 
-const cores = os.cpus().length;
-const getId = ((id) => () => id++)(0);
-
-const targets = ['http://google.com', 'http://facebook.com', 'http://naver.com'];
-const workers = [];
-const success = worker => {
+const targets = ['http://google.com', 'http://facebook.com'];
+const worker = new Worker('pdf');
+const {init, rendered, rendering, error } = Worker.event;
+const success = file => {
     const nextWork = targets.shift();
-    nextWork && worker.render(nextWork);
+    nextWork && worker.render(nextWork, '/dev/null', (() => true));
 };
-const rendered = renderParam => !Array.isArray(renderParam) && console.log(`[rendered] ${renderParam}`);
 
-for (let i = 0, worker;i < cores; i++) {
-    worker = new Worker(() => `${getId()}.pdf`);
-    worker.on('success', success);
-    worker.on('rendered', rendered);
-    worker.on('ready', success);
-    workers.push(worker);
-}
+worker.on(init, success);
+worker.on(rendered, success);
+```
+
+### promise driven
+
+```js
+const targets = ['http://google.com', 'http://facebook.com'];
+const worker = new Worker('pdf');
+const {init, rendered, rendering, error } = Worker.event;
+
+worker.on(init, () => {
+    (function loopback() {
+        const nextWork = targets.shift();
+        if (nextWork) {
+            worker.render(nextWork, '/dev/null', (() => true)).then(loopback);
+        }
+    })();
+});
+worker.on(rendered, (filename) => console.log(`${filename} generated`);
 ```
 
 ## todo
