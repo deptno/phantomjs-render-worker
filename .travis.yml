@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- '6'
+cache:
+  directories:
+  - node_modules
+install:
+- npm install
+- npm run build
+notifications:
+  email: false
+  slack:
+    secure: gabJFxp2eCYVKNUFNCyBSWF88CDx7Paec2ujs4el2Fb7CatSL9rmfhhQpBtTzz/BFHCgIYVBy/4aFwfqFIRmQlxIrRe4jaz5YvNtVc5GK3tOq2GFyKMLdVqUeyX1t1ZNXr99CpXi1SYujxtGhVzDAcM9xDYOmsFytZH/n++mSmGYIo1nXjko6KHWqPi7OGJlpaLgEQM9N9C0LMsGUaH/zysLHNtx3pooPqGg2gRl2LIOdTDwVWb6oBvs4c0nps9gTGWbYX0T477mQQvMKVmUYiZXijPSF7IUspmVOF1erZO8CCuRq4BeqmagjrgcRd2FFpy4QhOnKkHamMY31+aBviAzV8RdfDn4I16dJS3x+kLX+mLn10mOaMEF8bnQe/MfGYI9n+kalwx7iEfEjI5Aoj77dYLYma0PjYHRE3TJZkEJWc0Oy+q2hudZ2CAuNvu7jO9RrVfb5gmY+9MD10M4k+uXfqVplF0pJGKF2lrAmbDx5mtAMO2ZhsiGRilCEqH7VCe7PjZDKXQVqe1vfmscES3BwVfZJJIDTKuCps+aKKlHzN1h9rQ5josKpfWxWzSmkteERExyFBIr6ivFA3BkDIAxx5mJ2JVsO8VYpa5zmN4rtgVOVUaFYHwmXZhWbDZx+1L35rcMgKdtfYw6/Kw8nU2kBaMLZc//kc173HR2Kgs=
+deploy:
+  provider: npm
+  email: deptno@gmail.com
+  api_key:
+    secure: qw3+QAz+Wrm5HQF4Nh1gS9YfS/LFkMRTxUS9couFPYiB+3rBjjYst25yaiPZ8OV+/6Hzhx0HTsGTjWJ1rXaXhHGsBbX+6meghGBYZOxqQK8ZSO1veJgQiSfq5G5RTPl+WOFx9s7Dr5W18svE/LnzJEMMp57k9ezQlsnAdS1SAPLHLAo8UmzQhiJXnrGaJNj1aiKRLQEuptBZResDvFMJPEAz2/L5uycEYmfnI5DgXdlID/LOc4sCv2jB/vnPu9KX524bHJw112SGReRWVgUPmrRwoCI6F9Yp/ebTxjrI4x90vL4td+6J/PLXxWQsY02LYW5OpzNtAXqp3vl+8gAgMq7Oh9R41Mgasn1h/2SEMkSb+csXelEu5KK9DDst657eZce7QoSDUTuD4cU0hbAX+3gRSHjOAVNPwbRdVxRrSvvc42mlEGE4Q6njSbEEqSkIEtk3V2Lf17Pdm0KkFdIDlpGw+lde03ZwDeOGoI2NZuePRivMM+8zvooqEcbE6U/MAZKtdZkwZmIXhueC3frfXHwN72XPCmDKXecTNEMoUfR1OaEeQ7BLdzAuaPzMbjFDE+F6LMEsbNqZpqPGjhAFICqvl83KkdrPVXz0VA2wyTzWC9DrSY0GEVq8qK6FSNG7ZW5zycrhu+Tag+eaChi7K//zXfz5LAd8l0llnmdzNJE=
+  on:
+    tags: true
+    repo: deptno/phantomjs-render-worker
