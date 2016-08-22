@@ -1,6 +1,6 @@
 {
   "name": "phantomjs-render-worker",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "render pdf or image format via phantomjs",
   "main": "built/index.js",
   "scripts": {
