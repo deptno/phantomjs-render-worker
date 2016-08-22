@@ -54,15 +54,16 @@ export default class Worker extends EventEmitter {
             const status = await this.page.open(url);
 
             if (status === 'success') {
-                this.emit(Worker.event.rendering, this);
+                this.emit(Worker.event.rendering, file);
                 try {
                     const result = await this._render(file, poll || this.poll);
                     resolve(result);
-                } catch(error) {
+                } catch (error) {
                     reject({ file, error });
                 }
             } else {
-                this.emit(Worker.event.error, this);
+                this.emit(Worker.event.error, file);
+                reject({ file, error: `${url} open failed` });
             }
         });
     }
@@ -75,9 +76,10 @@ export default class Worker extends EventEmitter {
                     if (ready) {
                         try {
                             await this.page.render(file, {format: this.format});
-                            resolve(file);
                             this.emit(Worker.event.rendered, file);
+                            resolve(file);
                         } catch (ex) {
+                            this.emit(Worker.event.error, file);
                             reject(ex);
                         }
                     } else {
