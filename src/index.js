@@ -63,8 +63,10 @@ export default class Worker extends EventEmitter {
                 this.emit(Worker.event.rendering, file);
                 try {
                     const result = await this._render(file, poll || this.poll);
+                    this.emit(Worker.event.rendered, file);
                     resolve(result);
                 } catch (error) {
+                    this.emit(Worker.event.error, file);
                     reject({ file, error });
                 }
             } else {
@@ -82,10 +84,8 @@ export default class Worker extends EventEmitter {
                     if (ready) {
                         try {
                             await this.page.render(file, {format: this.format});
-                            this.emit(Worker.event.rendered, file);
                             resolve(file);
                         } catch (ex) {
-                            this.emit(Worker.event.error, file);
                             reject(ex);
                         }
                     } else {
