@@ -97,13 +97,11 @@ const targets = ['http://google.com', 'http://facebook.com'];
 const worker = new Worker('pdf');
 const {init, rendered, rendering, error } = Worker.event;
 
-worker.on(init, () => {
-    (function loopback() {
-        const nextWork = targets.shift();
-        if (nextWork) {
-            worker.render(nextWork, '/dev/null', (() => true)).then(loopback);
-        }
-    })();
+worker.on(init, function loopback() => {
+    const nextWork = targets.shift();
+    if (nextWork) {
+        worker.render(nextWork, '/dev/null', (() => true)).then(loopback);
+    }
 });
 worker.on(rendered, (filename) => console.log(`${filename} generated`);
 ```
