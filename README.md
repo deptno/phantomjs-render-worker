@@ -1,5 +1,5 @@
-phantomjs-render-worker [![Build Status](https://travis-ci.org/deptno/phantomjs-render-worker.svg?branch=master)](https://travis-ci.org/deptno/phantomjs-render-worker)
-=======================
+# phantomjs-render-worker [![Build Status](https://travis-ci.org/deptno/phantomjs-render-worker.svg?branch=master)](https://travis-ci.org/deptno/phantomjs-render-worker)
+[![npm](https://img.shields.io/npm/dt/phantomjs-render-worker.svg?style=for-the-badge)](https://www.npmjs.com/package/phantomjs-render-worker)
 
 ## method
 
@@ -110,6 +110,10 @@ worker.on(rendered, (filename) => console.log(`${filename} generated`);
 
 * render via stream
 * kill worker
+
+## related
+
+- https://github.com/deptno/render-worker-pool-manager
 
 ## license
 
